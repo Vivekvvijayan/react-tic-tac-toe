@@ -1,0 +1,38 @@
+
+            if (space[0] === currentPlayer) {
+                // checking [ 0,1,2 ] combination
+
+                if (space[1] === currentPlayer && space[2] === currentPlayer) {
+                    console.log(currentPlayer + 'wins [ 0,1,2 ] pattern wins');
+                    return true;
+                }
+
+                // checking [ 0,3,6 ] combination
+
+                if (space[3] === currentPlayer && space[6] === currentPlayer) {
+                    console.log(currentPlayer + 'wins [ 0,3,6 ] pattern wins');
+                    return true;
+                }
+
+                // diagonal checking
+
+                if (space[4] === currentPlayer && space[8] === currentPlayer) {
+                    console.log(currentPlayer + 'wins');
+                    return true;
+                }
+
+            }
+            // 8 common point checking
+            if (space[8] === currentPlayer) {
+                // checking [ 2,5,8 ]
+                if (space[5] === currentPlayer && space[2] === currentPlayer) {
+                    console.log(currentPlayer + 'wins');
+                    return true;
+                }
+                // chcking horizontal pattern
+
+                if (space[7] === currentPlayer && space[6] === currentPlayer) {
+                    console.log(currentPlayer + 'wins');
+                    return true;
+                }
+            }
