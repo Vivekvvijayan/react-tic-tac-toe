@@ -4,8 +4,7 @@ const Modals = ({ draw,message,currentPlayer }) => {
 
     const [open,setopen] = useState(draw)
     return (
-        <div className="modalss">
-
+        
         <Modal 
         visible={open}
         effect="fadeInUp"
@@ -15,13 +14,15 @@ const Modals = ({ draw,message,currentPlayer }) => {
         
         
         >
+        <div className="modalss">
 
-            <h1>{draw}{message}</h1>
+            <h1>{message}</h1>
+            <h1>{draw}</h1>
 
-            <button>Restart</button>
             
-        </Modal>
+            
         </div>
+        </Modal>
     )
 }
 

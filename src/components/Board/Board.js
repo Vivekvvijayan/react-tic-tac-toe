@@ -8,74 +8,78 @@ function Board() {
     const [space, setSpace] = useState(['', '', '', '', '', '', '', '', ''])
     const [turn, setTurn] = useState('0');
     const [winner, setWinner] = useState('');
-    const [reset,setReset] = useState(false)
+    const [reset, setReset] = useState(false);
     const [draw, setDraw] = useState(false);
     const [currentPlayer, setCurrentPlayer] = useState('0');
 
     const boardRef = useRef(null);
 
+    // to draw tics on screen
     const drawTic = (e, pos) => {
 
-        if (winner === '' && space[pos-1] === '')
-        {
-        setTurn(currentPlayer === '0' ? 'X' : '0')
-        setCurrentPlayer(currentPlayer === '0' ? 'X' : '0')
-        e.target.innerText = currentPlayer
-        space[pos - 1] = currentPlayer;
+        if (space[pos - 1] === '') {
+            space[pos - 1] = currentPlayer;
+            e.target.innerText = currentPlayer;
+            setTurn(turn === '0' ? 'X' : '0');
+            setCurrentPlayer(turn === '0' ? 'X' : '0');
+            return;
         }
     }
-    // testing use effect
+
+
+    //to reset game to initial state
 
     useEffect(() => {
-        setSpace(['', '', '', '', '', '', '', '', ''])
+       
+        space.forEach((item,index) => {
+            space[index] = ''
+        })
         let cells = boardRef.current.children
 
-        for(let i=1;i<=9;i++){
-            console.log('reseted')
+        for (let i = 0; i < 9; i++) {
+            cells[i].innerText = ''
         }
+       
         
-        setTurn('0')
-         setDraw(false)
-    }, [draw,reset,winner])
+    
+    }, [reset,winner,setWinner])
 
 
-
+    // to check for winner and game over conditions
     useEffect(() => {
 
-        const checkRow = () =>{
-           
-            for(let i=0;i<=9;i+=3){
-                if(space[i]===currentPlayer && space[i+1] && space[i]==currentPlayer && space[i+2]==currentPlayer){
+        const checkRow = () => {
+
+            for (let i = 0; i < 9; i += 3) {
+
+                if (space[i] === space[i+1] && space[i] && space[i+2] && space[i]!=='') {
                     return true;
                 }
 
             }
+    
         }
 
 
-        const checkCol = () =>{
-           
-            for(let i=0;i<=3;i++){
-                if(space[i]===currentPlayer&&space[i+3] && space[i]===currentPlayer && space[i+6]==currentPlayer){
+        const checkCol = () => {
+
+            for (let i = 0; i < 3; i++) {
+                if (space[i] === space[i + 3] &&space[i] === space[i + 6] && space[i]!=='') {
                     return true;
                 }
             }
+          
         }
 
-
-        const checkDiagonal = () =>{
-            for(let i=0;i<=9;i+=2){
-                if(space[i]===currentPlayer && space[i+4]===currentPlayer && space[i+8]==currentPlayer){
-                    return true
+        const checkDiagonal = () => {
+                if ((space[0] === space[4] && space[4]=== space[8]&&space[4]!=='') || (space[2] === space[4] && space[4] === space[6]&& space[4]!=='')) {
+                    return true;
                 }
             }
-        }
+        
 
-        const checkWin = () => {
 
-                return (checkRow() || checkCol() || checkDiagonal());
-
-        }
+        // checking for game over conditions
 
         const checkDraw = () => {
             let count = 0;
@@ -83,51 +87,49 @@ function Board() {
                 if (element !== '') {
                     count++;
                 }
-               
-            })
-            console.log(count)
-            if (count === 9) {
-                return true;
-            }
-         
-        }
+                
 
+            })
+            
+            return count === 9;
+
+        }
+        const checkWin = () => {
+
+            return checkRow() || checkCol() || checkDiagonal();
+
+        }
 
         if (checkWin()) {
-            setWinner(currentPlayer === '0' ? "0" : "X")
-            setReset(true)
-            
-        }
-
-        if (checkDraw()) {
+            setWinner(turn === '0' ? 'X' : '0');
+            setReset(true);
+        } else if(checkDraw()) {
             setDraw(true)
             setReset(true)
         }
-    },[turn,setTurn,currentPlayer,space])
-  
+    })
+
 
     // testing use effect
- 
-
     return (
 
         <div className="main">
             <header className="header">
                 <h2>Tic Tac Toe</h2>
                 <div className="middle-container">
-        <div className="toggle">
+                    <div className="toggle">
 
-                    <h3 className={turn==='0' ? "player" : null}>Player 1</h3 >
-                    {/* <button>Reset</button> */}
-                    <h3 className={turn==='X' ? "player" : null}>Player 2</h3>
-        </div>
-                  
+                        <h3 className={turn === '0' ? "player" : null}>Player 1</h3 >
+                        {/* <button>Reset</button> */}
+                        <h3 className={turn === 'X' ? "player" : null}>Player 2</h3>
+                    </div>
+
                 </div>
             </header>
             <div className="game_body" >
 
                 <div className="board" ref={boardRef}>
-                    <div className="cell b-1" id="1" onClick={(e) => drawTic(e, 1)}></div>
+                    <div className="cell b-1" onClick={(e) => drawTic(e, 1)}></div>
                     <div className="cell b-2" onClick={(e) => drawTic(e, 2)}></div>
                     <div className="cell b-3" onClick={(e) => drawTic(e, 3)}></div>
                     <div className="cell b-4" onClick={(e) => drawTic(e, 4)}></div>
@@ -146,7 +148,7 @@ function Board() {
                 draw ? <Modals draw={draw} message="The game is drawn " /> : null
             }
             {
-                winner ? <Modals draw={winner} message="Is winned" /> : null
+                winner ? <Modals draw={winner} message="WINNER" /> : null
             }
 
             <div className="botton_container">
